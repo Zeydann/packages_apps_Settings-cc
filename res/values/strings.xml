@@ -2916,6 +2916,28 @@
     <string name="wifi_hotspot_auto_off_title">Turn off hotspot automatically</string>
     <!-- Summary for the toggle to turn off hotspot automatically [CHAR LIMIT=NONE]-->
     <string name="wifi_hotspot_auto_off_summary">When no devices are connected</string>
+
+    <string name="wifi_hotspot_advanced_title">Advanced</string>
+    <string name="wifi_hotspot_advanced_summary">Timeout, hidden network, connected devices</string>
+
+    <string name="wifi_hotspot_hidden_ssid_title">Hidden network</string>
+    <string name="wifi_hotspot_hidden_ssid_summary">Your hotspot name won\u2019t appear in the list of available networks</string>
+
+    <string name="wifi_hotspot_shutdown_timeout_title">Shutdown timeout</string>
+    <string name="wifi_hotspot_shutdown_timeout_default">Default</string>
+    <string name="wifi_hotspot_shutdown_timeout_5min">5 minutes</string>
+    <string name="wifi_hotspot_shutdown_timeout_10min">10 minutes</string>
+    <string name="wifi_hotspot_shutdown_timeout_30min">30 minutes</string>
+    <string name="wifi_hotspot_shutdown_timeout_1hour">1 hour</string>
+
+    <string name="wifi_hotspot_connected_devices_title">Connected devices</string>
+    <string name="wifi_hotspot_connected_devices_none">No devices connected</string>
+    <string name="wifi_hotspot_connected_devices_unknown">Unknown device</string>
+    <string name="wifi_hotspot_block_client">Block</string>
+    <string name="wifi_hotspot_unblock_client">Unblock</string>
+    <string name="wifi_hotspot_blocked_devices_title">Blocked devices</string>
+    <string name="wifi_hotspot_blocked_devices_none">No blocked devices</string>
+
     <!-- Title for the toggle to enable/disable the maximize compatibility [CHAR LIMIT=NONE]-->
     <string name="wifi_hotspot_maximize_compatibility">Extend compatibility</string>
     <!-- Summary for the toggle to show the maximize compatibility warning message in single AP device [CHAR LIMIT=NONE]-->
