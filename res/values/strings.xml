@@ -2938,6 +2938,19 @@
     <string name="wifi_hotspot_blocked_devices_title">Blocked devices</string>
     <string name="wifi_hotspot_blocked_devices_none">No blocked devices</string>
 
+    <!-- One-time Hotspot Data Limit -->
+    <string name="wifi_hotspot_data_limit_title">One-time data limit</string>
+    <string name="wifi_hotspot_data_limit_summary">Hotspot will turn off when the specified limit is reached</string>
+    <string name="wifi_hotspot_data_limit_reached_toast">Hotspot turned off: Data limit reached</string>
+    <string name="wifi_hotspot_data_limit_value_title">Data limit size</string>
+    <string name="wifi_hotspot_data_limit_50mb">50 MB</string>
+    <string name="wifi_hotspot_data_limit_100mb">100 MB</string>
+    <string name="wifi_hotspot_data_limit_200mb">200 MB</string>
+    <string name="wifi_hotspot_data_limit_500mb">500 MB</string>
+    <string name="wifi_hotspot_data_limit_1gb">1 GB</string>
+    <string name="wifi_hotspot_data_limit_2gb">2 GB</string>
+    <string name="wifi_hotspot_data_limit_5gb">5 GB</string>
+
     <!-- Title for the toggle to enable/disable the maximize compatibility [CHAR LIMIT=NONE]-->
     <string name="wifi_hotspot_maximize_compatibility">Extend compatibility</string>
     <!-- Summary for the toggle to show the maximize compatibility warning message in single AP device [CHAR LIMIT=NONE]-->

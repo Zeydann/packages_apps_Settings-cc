@@ -83,6 +83,22 @@ class WifiTetherAdvancedSettings : Fragment() {
             onDispose { controller.stop() }
         }
 
+        val dataLimitOptions = listOf(
+            "52428800" to stringResource(R.string.wifi_hotspot_data_limit_50mb),
+            "104857600" to stringResource(R.string.wifi_hotspot_data_limit_100mb),
+            "209715200" to stringResource(R.string.wifi_hotspot_data_limit_200mb),
+            "524288000" to stringResource(R.string.wifi_hotspot_data_limit_500mb),
+            "1073741824" to stringResource(R.string.wifi_hotspot_data_limit_1gb),
+            "2147483648" to stringResource(R.string.wifi_hotspot_data_limit_2gb),
+            "5368709120" to stringResource(R.string.wifi_hotspot_data_limit_5gb),
+        )
+
+        val currentUsageStr = if (state.dataLimitEnabled && state.currentSessionBytes > 0) {
+            "Used: ${android.text.format.Formatter.formatFileSize(context, state.currentSessionBytes)} / ${android.text.format.Formatter.formatFileSize(context, state.dataLimitBytes)}"
+        } else {
+            stringResource(R.string.wifi_hotspot_data_limit_summary)
+        }
+
         Scaffold(
             containerColor = MaterialTheme.colorScheme.surfaceContainer,
         ) { paddingValues ->
@@ -123,6 +139,25 @@ class WifiTetherAdvancedSettings : Fragment() {
                                     onValueChangeFinished = { controller.setMaxNumberOfClients(state.maxNumberOfClients) },
                                     valueRange = 1f..state.maxSupportedClients.toFloat(),
                                     displayValue = state.maxNumberOfClients.toString(),
+                                )
+                            }
+                        }
+                        item {
+                            SwitchPreference(
+                                title = stringResource(R.string.wifi_hotspot_data_limit_title),
+                                summary = currentUsageStr,
+                                checked = state.dataLimitEnabled,
+                                onCheckedChange = { controller.setDataLimitEnabled(it) },
+                            )
+                        }
+                        if (state.dataLimitEnabled) {
+                            item {
+                                ListPreference(
+                                    title = stringResource(R.string.wifi_hotspot_data_limit_value_title),
+                                    summary = dataLimitOptions.find { it.first == state.dataLimitBytes.toString() }?.second ?: "",
+                                    options = dataLimitOptions,
+                                    value = state.dataLimitBytes.toString(),
+                                    onValueChange = { controller.setDataLimitBytes(it.toLong()) },
                                 )
                             }
                         }

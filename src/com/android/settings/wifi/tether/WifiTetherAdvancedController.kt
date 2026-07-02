@@ -15,8 +15,10 @@
  */
 package com.android.settings.wifi.tether
 
+import android.app.usage.NetworkStatsManager
 import android.content.Context
 import android.net.MacAddress
+import android.net.NetworkTemplate
 import android.net.TetheredClient
 import android.net.TetheringManager
 import android.net.wifi.SoftApCapability
@@ -26,6 +28,9 @@ import android.net.wifi.WifiManager
 import android.os.Handler
 import android.os.HandlerExecutor
 import android.os.Looper
+import android.provider.Settings
+import android.util.Log
+import android.widget.Toast
 import com.android.settings.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,9 +50,12 @@ data class TetherAdvancedState(
     val maxNumberOfClients: Int = 0,
     val supportClientLimit: Boolean = false,
     val maxSupportedClients: Int = 10,
+    val dataLimitEnabled: Boolean = false,
+    val dataLimitBytes: Long = 524_288_000L, // Default 500 MB
+    val currentSessionBytes: Long = 0L,
 )
 
-class WifiTetherAdvancedController(context: Context) {
+class WifiTetherAdvancedController(private val context: Context) {
 
     private val wifiManager = context.getSystemService(WifiManager::class.java)
     private val tetheringManager = context.getSystemService(TetheringManager::class.java)
@@ -75,9 +83,14 @@ class WifiTetherAdvancedController(context: Context) {
         }
 
         override fun onStateChanged(state: Int, failureReason: Int) {
-            if (state != WifiManager.WIFI_AP_STATE_ENABLED) {
+            if (state == WifiManager.WIFI_AP_STATE_ENABLED) {
+                val startTime = System.currentTimeMillis()
+                Settings.Secure.putLong(context.contentResolver, "wifi_hotspot_session_start_time", startTime)
+                startDataLimitMonitoring()
+            } else {
                 softApClients = emptyList()
                 updateConnectedDevices()
+                stopDataLimitMonitoring()
             }
         }
 
@@ -103,11 +116,15 @@ class WifiTetherAdvancedController(context: Context) {
         _state.value = readState()
         wifiManager.registerSoftApCallback(mainExecutor, softApCallback)
         tetheringManager.registerTetheringEventCallback(mainExecutor, tetheringCallback)
+        if (wifiManager.wifiApState == WifiManager.WIFI_AP_STATE_ENABLED) {
+            startDataLimitMonitoring()
+        }
     }
 
     fun stop() {
         wifiManager.unregisterSoftApCallback(softApCallback)
         tetheringManager.unregisterTetheringEventCallback(tetheringCallback)
+        stopDataLimitMonitoring()
     }
 
     fun setHiddenSsid(hidden: Boolean) {
@@ -181,11 +198,15 @@ class WifiTetherAdvancedController(context: Context) {
 
     private fun readState(): TetherAdvancedState {
         val config = wifiManager.softApConfiguration
+        val limitEnabled = Settings.Secure.getInt(context.contentResolver, "wifi_hotspot_data_limit_enabled", 0) == 1
+        val limitBytes = Settings.Secure.getLong(context.contentResolver, "wifi_hotspot_data_limit_size", 524_288_000L)
         return TetherAdvancedState(
             hiddenSsid = config.isHiddenSsid,
             shutdownTimeout = config.shutdownTimeoutMillis,
             blockedDevices = config.blockedClientList.map { it.toString() },
             maxNumberOfClients = config.maxNumberOfClients,
+            dataLimitEnabled = limitEnabled,
+            dataLimitBytes = limitBytes,
         )
     }
 
@@ -199,6 +220,101 @@ class WifiTetherAdvancedController(context: Context) {
             .build()
         if (wifiManager.setSoftApConfiguration(config)) {
             _state.value = _state.value.copy(maxNumberOfClients = limit)
+        }
+    }
+
+    fun setDataLimitEnabled(enabled: Boolean) {
+        Settings.Secure.putInt(context.contentResolver, "wifi_hotspot_data_limit_enabled", if (enabled) 1 else 0)
+        _state.value = _state.value.copy(dataLimitEnabled = enabled)
+        if (enabled && wifiManager.wifiApState == WifiManager.WIFI_AP_STATE_ENABLED) {
+            startDataLimitMonitoring()
+        } else if (!enabled) {
+            stopDataLimitMonitoring()
+        }
+    }
+
+    fun setDataLimitBytes(bytes: Long) {
+        Settings.Secure.putLong(context.contentResolver, "wifi_hotspot_data_limit_size", bytes)
+        _state.value = _state.value.copy(dataLimitBytes = bytes)
+        if (state.value.dataLimitEnabled && wifiManager.wifiApState == WifiManager.WIFI_AP_STATE_ENABLED) {
+            checkDataLimit()
+        }
+    }
+
+    private var dataLimitCheckRunnable: Runnable? = null
+    private var sessionStartTime: Long = 0L
+
+    private fun startDataLimitMonitoring() {
+        if (dataLimitCheckRunnable != null) return
+        sessionStartTime = Settings.Secure.getLong(
+            context.contentResolver,
+            "wifi_hotspot_session_start_time",
+            System.currentTimeMillis()
+        )
+        
+        dataLimitCheckRunnable = object : Runnable {
+            override fun run() {
+                if (wifiManager.wifiApState != WifiManager.WIFI_AP_STATE_ENABLED) {
+                    stopDataLimitMonitoring()
+                    return
+                }
+                checkDataLimit()
+                mainHandler.postDelayed(this, 5000L) // Check every 5 seconds
+            }
+        }
+        mainHandler.post(dataLimitCheckRunnable!!)
+    }
+
+    private fun stopDataLimitMonitoring() {
+        dataLimitCheckRunnable?.let {
+            mainHandler.removeCallbacks(it)
+        }
+        dataLimitCheckRunnable = null
+        _state.value = _state.value.copy(currentSessionBytes = 0L)
+    }
+
+    private fun checkDataLimit() {
+        val networkStatsManager = context.getSystemService(NetworkStatsManager::class.java) ?: return
+        try {
+            val templates = listOf(
+                NetworkTemplate.Builder(NetworkTemplate.MATCH_MOBILE).build(),
+                NetworkTemplate.Builder(NetworkTemplate.MATCH_WIFI).build()
+            )
+            var usedBytes = 0L
+            for (template in templates) {
+                try {
+                    val stats = networkStatsManager.querySummary(
+                        template,
+                        sessionStartTime,
+                        System.currentTimeMillis()
+                    )
+                    val bucket = android.app.usage.NetworkStats.Bucket()
+                    while (stats.getNextBucket(bucket)) {
+                        if (bucket.uid == android.app.usage.NetworkStats.Bucket.UID_TETHERING) {
+                            usedBytes += bucket.rxBytes + bucket.txBytes
+                        }
+                    }
+                    stats.close()
+                } catch (e: Exception) {
+                    // Ignore if a specific template isn't active/supported
+                }
+            }
+
+            _state.value = _state.value.copy(currentSessionBytes = usedBytes)
+
+            if (state.value.dataLimitEnabled && usedBytes >= state.value.dataLimitBytes) {
+                tetheringManager.stopTethering(TetheringManager.TETHERING_WIFI)
+                mainHandler.post {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.wifi_hotspot_data_limit_reached_toast),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                stopDataLimitMonitoring()
+            }
+        } catch (e: Exception) {
+            Log.e("WifiTetherAdvancedController", "Failed to check data limit", e)
         }
     }
 
