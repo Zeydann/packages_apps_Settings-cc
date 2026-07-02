@@ -19,6 +19,7 @@ import android.content.Context
 import android.net.MacAddress
 import android.net.TetheredClient
 import android.net.TetheringManager
+import android.net.wifi.SoftApCapability
 import android.net.wifi.SoftApConfiguration
 import android.net.wifi.WifiClient
 import android.net.wifi.WifiManager
@@ -41,6 +42,9 @@ data class TetherAdvancedState(
     val shutdownTimeout: Long = SoftApConfiguration.DEFAULT_TIMEOUT,
     val connectedDevices: List<ConnectedDevice> = emptyList(),
     val blockedDevices: List<String> = emptyList(),
+    val maxNumberOfClients: Int = 0,
+    val supportClientLimit: Boolean = false,
+    val maxSupportedClients: Int = 10,
 )
 
 class WifiTetherAdvancedController(context: Context) {
@@ -75,6 +79,16 @@ class WifiTetherAdvancedController(context: Context) {
                 softApClients = emptyList()
                 updateConnectedDevices()
             }
+        }
+
+        override fun onCapabilityChanged(capability: SoftApCapability) {
+            val supportForceDisconnect = capability.areFeaturesSupported(
+                SoftApCapability.SOFTAP_FEATURE_CLIENT_FORCE_DISCONNECT
+            )
+            _state.value = _state.value.copy(
+                supportClientLimit = supportForceDisconnect,
+                maxSupportedClients = capability.maxSupportedClients
+            )
         }
     }
 
@@ -171,7 +185,21 @@ class WifiTetherAdvancedController(context: Context) {
             hiddenSsid = config.isHiddenSsid,
             shutdownTimeout = config.shutdownTimeoutMillis,
             blockedDevices = config.blockedClientList.map { it.toString() },
+            maxNumberOfClients = config.maxNumberOfClients,
         )
+    }
+
+    fun updateMaxNumberOfClients(limit: Int) {
+        _state.value = _state.value.copy(maxNumberOfClients = limit)
+    }
+
+    fun setMaxNumberOfClients(limit: Int) {
+        val config = SoftApConfiguration.Builder(wifiManager.softApConfiguration)
+            .setMaxNumberOfClients(limit)
+            .build()
+        if (wifiManager.setSoftApConfiguration(config)) {
+            _state.value = _state.value.copy(maxNumberOfClients = limit)
+        }
     }
 
     companion object {

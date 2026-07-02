@@ -48,6 +48,7 @@ import com.android.axion.compose.preferences.BasePreference
 import com.android.axion.compose.preferences.ListPreference
 import com.android.axion.compose.preferences.PreferenceGroup
 import com.android.axion.compose.preferences.PreferencePosition
+import com.android.axion.compose.preferences.SliderPreference
 import com.android.axion.compose.preferences.SwitchPreference
 import com.android.axion.compose.theme.AxionTheme
 import com.android.settings.R
@@ -111,6 +112,19 @@ class WifiTetherAdvancedSettings : Fragment() {
                                 checked = state.hiddenSsid,
                                 onCheckedChange = { controller.setHiddenSsid(it) },
                             )
+                        }
+                        if (state.supportClientLimit) {
+                            item {
+                                SliderPreference(
+                                    title = stringResource(R.string.wifi_hotspot_client_limit_title),
+                                    summary = "",
+                                    value = state.maxNumberOfClients.toFloat(),
+                                    onValueChange = { controller.updateMaxNumberOfClients(it.toInt()) },
+                                    onValueChangeFinished = { controller.setMaxNumberOfClients(state.maxNumberOfClients) },
+                                    valueRange = 1f..state.maxSupportedClients.toFloat(),
+                                    displayValue = state.maxNumberOfClients.toString(),
+                                )
+                            }
                         }
                     }
                 }
