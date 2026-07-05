@@ -47,12 +47,11 @@ class AboutDeviceNamePreference :
             KEY_DEVICE_NAME_PROP,
             context.getString(R.string.device_info_default)
         )
-        val deviceModel = Build.MODEL
-        val deviceMarketName = SystemProperties.get(
+        val deviceModel = SystemProperties.get(
             KEY_MARKET_NAME_PROP,
-            "$deviceBrand $deviceModel"
+            Build.MODEL
         )
-        return "$deviceMarketName | $deviceCodename"
+        return "$deviceBrand $deviceModel | $deviceCodename"
     }
 
     override fun isAvailable(context: Context) = true

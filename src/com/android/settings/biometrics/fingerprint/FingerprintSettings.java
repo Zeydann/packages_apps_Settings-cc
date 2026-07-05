@@ -49,9 +49,11 @@ import android.graphics.drawable.Drawable;
 import android.hardware.fingerprint.Fingerprint;
 import android.hardware.fingerprint.FingerprintManager;
 import android.hardware.fingerprint.FingerprintSensorPropertiesInternal;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.os.Handler;
+import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.os.VibrationEffect;
@@ -121,7 +123,6 @@ import com.android.settingslib.widget.SettingsThemeHelper;
 import com.android.settingslib.widget.TwoTargetPreference;
 
 import com.google.android.msdl.data.model.MSDLToken;
-import com.google.android.setupdesign.util.DeviceHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -755,7 +756,7 @@ public class FingerprintSettings extends SubSettings {
                 column.mTitle = getString(isPrivateProfile()
                         ? R.string.private_space_fingerprint_enroll_introduction_message
                         : R.string.security_settings_fingerprint_enroll_introduction_v3_message,
-                        DeviceHelper.getDeviceName(getActivity()));
+                        SystemProperties.get("ro.product.marketname", Build.MODEL));
                 if (helpIntent != null) {
                     column.mLearnMoreClickListener = learnMoreClickListener;
                     column.mLearnMoreOverrideText = getText(

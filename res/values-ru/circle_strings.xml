@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+     Copyright (C) 2026 Project CiRCLE
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+          http://www.apache.org/licenses/LICENSE-2.0
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Device spoofing -->
+    <string name="device_spoof_title">Спуфинг устройства</string>
+    <string name="circle_pih_enabled_title">"Включить спуфинг"</string>
+    <string name="device_spoof_summary">"Спуф устройства и ключей Play Integrity"</string>
+    <string name="keybox_data_title">"Выбрать Keybox"</string>
+    <string name="keybox_data_summary">"Выберите файл Keybox для подмены ключа аттестации"</string>
+    <string name="pif_data_title">"Выбрать PIF"</string>
+    <string name="pif_data_summary">"Выберите файл PIF для спуфа параметров устройства в приложениях"</string>
+
+    <!-- Hide developer status -->
+    <string name="search">"Поиск"</string>
+    <string name="search_apps">"Поиск приложений"</string>
+    <string name="hide_developer_status_title">"Скрыть режим разработчика"</string>
+    <string name="hide_developer_status_summary">"Скрыть режим разработчика от приложений"</string>
+
+    <!-- User selectable app spoofing -->
+    <string name="user_selectable_app_spoofing_title">"Приложения для спуфа"</string>
+    <string name="user_selectable_app_spoofing_summary">"Выбрать приложения, для которых применять спуфинг устройства"</string>
+    <string name="user_select_spoofing_profile_title">"Выбрать профиль спуфинга"</string>
+
+    <!-- Device name, seen in Android version -->
+    <string name="about_device_name">Модель устройства</string>
+    <string name="maintainer">"Сопровождающий"</string>
+     
+    <!-- Hardware info -->
+    <string name="platform_revision">Платформа SoC</string>
+    <string name="total_ram">Объем RAM</string>
+
+    <!-- Pocket mode -->
+    <string name="proximity_wake_title">"Защита от случайного включения"</string>
+    <string name="proximity_wake_summary">"Проверять датчик приближения перед пробуждением экрана"</string>
+
+</resources>

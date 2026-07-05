@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+     Copyright (C) 2026 Project CiRCLE
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+          http://www.apache.org/licenses/LICENSE-2.0
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Device spoofing -->
+    <string name="device_spoof_title">Cihaz gizleme</string>
+    <string name="circle_pih_enabled_title">"Cihaz gizlemeyi etkinleştir"</string>
+    <string name="device_spoof_summary">"Sistem geneli gizleme için cihaz bilgilerinin ve kanıt anahtarlarının üstüne yaz."</string>
+    <string name="keybox_data_title">"Keybox seç"</string>
+    <string name="keybox_data_summary">"Anahtar kanıtını gizlemek için keybox dosyası seç"</string>
+    <string name="pif_data_title">"Cihaz gizleme ayarı seç"</string>
+    <string name="pif_data_summary">"Uygulamalarda cihaz bilgilerinin üstüne yazmak için cihaz gizleme ayar dosyası seç"</string>
+
+    <!-- Hide developer status -->
+    <string name="search">"Ara"</string>
+    <string name="search_apps">"Uygulama ara"</string>
+    <string name="hide_developer_status_title">"Geliştirici durumunu gizle"</string>
+    <string name="hide_developer_status_summary">"Geliştirici durumunu uygulamalardan gizle"</string>
+
+    <!-- User selectable app spoofing -->
+    <string name="user_selectable_app_spoofing_title">"Gizlenecek uygulamaları seç"</string>
+    <string name="user_selectable_app_spoofing_summary">"Cihaz bilgisi gizlenecek uygulamaları seç"</string>
+    <string name="user_select_spoofing_profile_title">"Gizleme profili seç"</string>
+
+    <!-- Device name, seen in Android version -->
+    <string name="about_device_name">Cihaz</string>
+    <string name="maintainer">"Cihaz Geliştiricisi"</string>
+     
+    <!-- Hardware info -->
+    <string name="platform_revision">Platform</string>
+    <string name="total_ram">Toplam RAM</string>
+
+    <!-- Pocket mode -->
+    <string name="proximity_wake_title">"Kazayla açılmayı engelle"</string>
+    <string name="proximity_wake_summary">"Ekranı açmadan önce yakınlık sensörünü kontrol et"</string>
+
+</resources>

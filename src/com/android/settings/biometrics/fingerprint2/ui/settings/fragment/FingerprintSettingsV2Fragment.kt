@@ -26,7 +26,9 @@ import android.app.settings.SettingsEnums
 import android.content.Context.FINGERPRINT_SERVICE
 import android.content.Intent
 import android.hardware.fingerprint.FingerprintManager
+import android.os.Build
 import android.os.Bundle
+import android.os.SystemProperties
 import android.provider.Settings.Secure
 import android.text.TextUtils
 import android.util.Log
@@ -66,7 +68,6 @@ import com.android.settingslib.RestrictedLockUtils
 import com.android.settingslib.RestrictedLockUtilsInternal
 import com.android.settingslib.transition.SettingsTransitionHelper
 import com.android.settingslib.widget.FooterPreference
-import com.google.android.setupdesign.util.DeviceHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -428,7 +429,7 @@ class FingerprintSettingsV2Fragment :
       column.title =
         getString(
           R.string.security_settings_fingerprint_enroll_introduction_v3_message,
-          DeviceHelper.getDeviceName(requireActivity()),
+          SystemProperties.get("ro.product.marketname", Build.MODEL),
         )
       column.learnMoreOnClickListener = learnMoreClickListener
       column.learnMoreOverrideText =

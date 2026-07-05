@@ -26,7 +26,9 @@ import android.content.Intent;
 import android.hardware.biometrics.BiometricAuthenticator;
 import android.hardware.fingerprint.FingerprintManager;
 import android.hardware.fingerprint.FingerprintSensorPropertiesInternal;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemProperties;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -54,7 +56,6 @@ import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.google.android.setupcompat.template.FooterButton;
 import com.google.android.setupcompat.util.WizardManagerHelper;
 import com.google.android.setupdesign.span.LinkSpan;
-import com.google.android.setupdesign.util.DeviceHelper;
 
 import java.util.List;
 
@@ -166,7 +167,7 @@ public class FingerprintEnrollIntroduction extends BiometricEnrollIntroduction {
                 isPrivateProfile()
                         ? R.string.private_space_fingerprint_enroll_introduction_message
                         : R.string.security_settings_fingerprint_enroll_introduction_v3_message,
-                DeviceHelper.getDeviceName(this)));
+                SystemProperties.get("ro.product.marketname", Build.MODEL)));
 
         super.initViews();
     }

@@ -1316,7 +1316,7 @@
     <string name="wifi_hotspot_speed_2g" msgid="3400600834257664480">"2,4 GHz"</string>
     <string name="wifi_hotspot_speed_2g_summary" msgid="6930273933810520155">"Daha düşük hızlar. Çoğu cihazla uyumludur."</string>
     <string name="wifi_hotspot_speed_5g" msgid="4058116867148848395">"5 GHz"</string>
-    <string name="wifi_hotspot_speed_5g_summary" msgid="562987935924535694">"Yüksek hızlar. Çoğu cihazla uyumludur."</string>
+    <string name="wifi_hotspot_speed_5g_summary" msgid="562987935924535694">"Yüksek hızlar. Pek çok cihazla uyumludur."</string>
     <string name="wifi_hotspot_speed_2g_5g" msgid="9192756255938408285">"2,4 ve 5 GHz"</string>
     <string name="wifi_hotspot_speed_2g_5g_summary" msgid="8104575293617700173">"Yüksek hızlar. Bu dual band hotspot çoğu cihazla uyumludur."</string>
     <string name="wifi_hotspot_speed_6g" msgid="3787697484862730500">"6 GHz"</string>
