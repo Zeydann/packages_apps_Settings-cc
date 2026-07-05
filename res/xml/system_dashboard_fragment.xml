@@ -137,6 +137,7 @@
         android:key="device_spoofing"
         android:title="@string/device_spoof_title"
         android:summary="@string/device_spoof_summary"
+        android:icon="@drawable/ic_settings_security_filled"
         android:order="-34"
         android:fragment="com.android.settings.circle.security.DeviceSpoofFragment"/>
 
